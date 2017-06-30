@@ -1,0 +1,30 @@
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
+project( CV1)
+find_package( OpenCV REQUIRED )
+find_package(Threads REQUIRED)
+FIND_PACKAGE(Boost COMPONENTS chrono date_time filesystem locale log regex system thread REQUIRED)
+FIND_PACKAGE(Boost 1.53 COMPONENTS random system thread REQUIRED)
+IF(Boost_FOUND)
+    MESSAGE(STATUS "Boost_INCLUDE_DIRS  : ${Boost_INCLUDE_DIRS}")
+    MESSAGE(STATUS "Boost_LIBRARIES     : ${Boost_LIBRARIES}")
+    MESSAGE(STATUS "OpenCV_LIBRARIES     : ${OpenCV_LIBS}")
+
+ENDIF()
+
+set(Boost_USE_STATIC_LIBS ON)
+
+INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(SYSTEM websocketpp)
+
+ADD_EXECUTABLE(CV1 CVcontrol4.cpp)
+
+target_link_libraries(CV1 ${CMAKE_THREAD_LIBS_INIT}  -lrt)
+TARGET_LINK_LIBRARIES(CV1 serial ${Boost_LIBRARIES} ${OpenCV_LIBS} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_RANDOM_LIBRARY})
+IF(WIN32)
+    TARGET_LINK_LIBRARIES(CV1 wsock32 ws2_32)
+ELSE()
+    TARGET_LINK_LIBRARIES(CV1 pthread rt)
+ENDIF()
+
+

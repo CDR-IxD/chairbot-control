@@ -1,0 +1,3 @@
+/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CMakeFiles/edit_cache.dir
+/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CMakeFiles/rebuild_cache.dir
+/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CMakeFiles/CV1.dir
