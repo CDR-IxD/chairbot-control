@@ -20,7 +20,6 @@ using namespace std;
 using namespace cv;
 
 // Declaring the keys, etc required for aruco detection. Just keep these, if you have run aruco create programs, you can understand these keys
-
 namespace {
 const char* about = "Basic marker detection";
 const char* keys = "{d        |       | dictionary: DICT_4X4_50=0, DICT_4X4_100=1, DICT_4X4_250=2,"
@@ -62,8 +61,8 @@ static bool readDetectorParameters(string filename, Ptr<aruco::DetectorParameter
     fs["errorCorrectionRate"] >> params->errorCorrectionRate;
     return true;
 }
-// function for having some time delay in the code , can be used when we want a time delay
 
+// function for having some time delay in the code , can be used when we want a time delay
 int msleep(unsigned long milisec)
 {
     struct timespec req = { 0 };
@@ -81,8 +80,7 @@ int msleep(unsigned long milisec)
 int main(int argc, char* argv[])
 {
 
-//declaring variables which will be used later during aruco marker detection
-
+    //declaring variables which will be used later during aruco marker detection
     CommandLineParser parser(argc, argv, keys);
     parser.about(about);
 
@@ -92,35 +90,29 @@ int main(int argc, char* argv[])
 
     ///////////////////////////////file read stuff////////
 
-// reading stored co-ordinates from a yml file
-
+    // reading stored co-ordinates from a yml file
     FileStorage read_yml0("path_0.yml", FileStorage::READ);
 
-// i have stored the coordinates under the node : 'features', so accessing them and declaring FileNodeIterator
-
+    // i have stored the coordinates under the node : 'features', so accessing them and declaring FileNodeIterator
     FileNode features = read_yml0["features"];
     FileNodeIterator it = features.begin(), it_end = features.end();
-
     int path00_read = 0, path00_readnew = 0, loop3 = 0;
     int path_size = 0;
     int width = 40;
     float mag, temp, length = 0;
 
-// making vectors to store these read coordinates
-
+    // making vectors to store these read coordinates
     std::vector<int> x_read , y_read ;
     std::vector<int> ximpose, yimpose, x00, y00, xloop00, yloop00;
 
     // iterate through a sequence using FileNodeIterator
     for (; it != it_end; ++it, path00_read++) {
 
-		//cout << "feature #" << path00_read << ": ";
+        //cout << "feature #" << path00_read << ": ";
+        //cout << "x=" << (int)(*it)["x"];
+        //cout << "y=" << (int)(*it)["y"];
 
-		//cout << "x=" << (int)(*it)["x"];
-		//cout << "y=" << (int)(*it)["y"];
-
-// storing the accessed coordinates in vectors x_read , y_read  and declaring the vector variable x00, y00 to be of the samesize
-
+        // storing the accessed coordinates in vectors x_read , y_read  and declaring the vector variable x00, y00 to be of the samesize
         x_read .push_back(int((*it)["x"]));
         y_read .push_back(int((*it)["y"]));
         x00.push_back(0);
@@ -147,31 +139,29 @@ int main(int argc, char* argv[])
     }
 
     // setting the resolution of the camera frames
-
     cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
-
     Mat image = Mat::zeros(720, 1280, CV_8UC3);
+
     ///////////////////////////////send message
 
     char text[255];
     int loop1 = 0;
+
     // declaring some variables which will be used later
     float mx0, my0, mx1, my1, mxlast, mylast;
-
     float yoo, xoo, yol, xol;
 
     //websocket code
     bool done = false;
     std::string input;
 
-// we are using websockets for sending information or commands
-// declaring a websocket endpoint (refer messenger.hpp for more info), which will be used in sending commands
-
+    // we are using websockets for sending information or commands
+    // declaring a websocket endpoint (refer messenger.hpp for more info), which will be used in sending commands
     websocket_endpoint endpoint;
     int id0;
-// declaring the url and corresponding id of our r-pi to send information to
 
+    // declaring the url and corresponding id of our r-pi to send information to
     std::string uri0 = "ws://chairbot00.local:8000";
     id0 = endpoint.connect(uri0);
 
@@ -186,10 +176,10 @@ int main(int argc, char* argv[])
     int totalIterations = 0, mkv0 = 0;
     float angle;
     int path_window = 500;
-    ///cv
-// declaring some strings, these will be used while sending commands to arduino, as arduino recieves 3 integers for now in a format like this {a,b,c}
-// a means fwd, bwd, right, left, and b,c represents the rightpwm and leftpwm
 
+    ///cv
+    // declaring some strings, these will be used while sending commands to arduino, as arduino recieves 3 integers for now in a format like this {a,b,c}
+    // a means fwd, bwd, right, left, and b,c represents the rightpwm and leftpwm
     string cmd1("1");
     string cmd2("2");
     string cmd3("3");
@@ -199,45 +189,37 @@ int main(int argc, char* argv[])
     string endline("\n");
     char pwm_right[15];
     char pwm_left[15];
-
     double tick;
     int xdifflast = 0;
     string start;
 
-// declaring videowriter object for saving the output video in a specific format
-
+    // declaring videowriter object for saving the output video in a specific format
     VideoWriter video("out.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(1280, 720), true);
 
     //	cout<<"start"<<endl;
     //	std::getline(std::cin, start);
 
-// declaring images to store captured frames
-
+    // declaring images to store captured frames
     Mat myimage; //= Mat::zeros( image.size(), CV_8UC3 );
     Mat cvimage; //= Mat::zeros( image.size(), CV_8UC3 );
 
     while (cap.isOpened()) {
-
         double tick = (double)getTickCount();
+
         //////////CV//////////
 
-// copying read frames to our image matrices
-
+        // copying read frames to our image matrices
         bool b1Success = cap.read(myimage);
         bool b2Success = cap.read(cvimage);
 
-// declaring local matrix of same size for visualizing current loop stuff
-
+        // declaring local matrix of same size for visualizing current loop stuff
         Mat dummyimage = Mat::zeros(myimage.size(), CV_8UC3);
 
-// variables and booleans declared for our understanding and accessing different detected markers.
-
+        // variables and booleans declared for our understanding and accessing different detected markers.
         int number0;
-
         bool yes0 = false;
 
-// parameters declared used in aruco marker detection
-
+        // parameters declared used in aruco marker detection
         vector<int> ids;
         vector<vector<Point2f> > corners, rejected;
         vector<Vec3d> rvecs, tvecs;
@@ -246,14 +228,12 @@ int main(int argc, char* argv[])
         aruco::detectMarkers(cvimage, dictionary, corners, ids, detectorParams, rejected);
 
         // draw results
-
         if (ids.size() > 0) {
             aruco::drawDetectedMarkers(cvimage, corners, ids, Scalar(255, 0, 0));
             aruco::drawDetectedMarkers(dummyimage, corners, ids, Scalar(255, 0, 0));
         }
 
-// setting values of declared variables and booleans corresponding to different markers
-
+        // setting values of declared variables and booleans corresponding to different markers
         for (int l = 0; l < ids.size(); l++) {
             if (ids[l] == 0) {
                 yes0 = true;
@@ -265,16 +245,13 @@ int main(int argc, char* argv[])
 
         if ((ids.size() > 0) && (yes0)) {
 
-// declaring variables storing coordinates of the corners of the detected marker in this loop
-
-
+            // declaring variables storing coordinates of the corners of the detected marker in this loop
             int xeint, yeint;
             float xe, x0, x1, x2, x3, x30m, x12m, ye, y0, y1, y2, y3, y30m, y12m, abovex, abovey;
             Point2f c0, c1, c2, c3, midpt, above;
 
-// will print yes if this marker corresponding to chairbot00 is detected.
-// accessing and saving all the detected corners, finding a mid point as well
-
+            // will print yes if this marker corresponding to chairbot00 is detected.
+            // accessing and saving all the detected corners, finding a mid point as well
             //cout << "------------------yes" << endl;
             c0 = corners[number0][0];
             c1 = corners[number0][1];
@@ -295,7 +272,8 @@ int main(int argc, char* argv[])
             y3 = c3.y;
             ye = (midpt.y);
             yeint = int(ye);
-//x30m means x-coord of mid pt. of corners 3 and 0, similarly x12m means of between 1 and 2.
+
+            //x30m means x-coord of mid pt. of corners 3 and 0, similarly x12m means of between 1 and 2.
             x30m = (x3 + x0) / 2;
             x12m = (x1 + x2) / 2;
             y30m = (y3 + y0) / 2;
@@ -312,6 +290,7 @@ int main(int argc, char* argv[])
 
             const Point* pts = (const Point*)Mat(pointpoly).data;
             int npts = 4;
+
             //front poly
             polylines(dummyimage, &pts, &npts, 1,
                 true, // draw closed contour (i.e. joint end to start)
@@ -328,6 +307,7 @@ int main(int argc, char* argv[])
 
             const Point* pts2 = (const Point*)Mat(pointpoly2).data;
             int npts2 = 4;
+
             //backpoly
             polylines(dummyimage, &pts2, &npts2, 1,
                 true, // draw closed contour (i.e. joint end to start)
@@ -337,17 +317,16 @@ int main(int argc, char* argv[])
 
             ///////////////////////////////////polygon...... :) //////
 
-// to find the orientation as at which angle is the chair oriented at, declaring the point 'above'
-
+            // to find the orientation as at which angle is the chair oriented at, declaring the point 'above'
             above.x = (x3 + 50);
             above.y = (y3);
+
             //y1=corners[0][1].y;
             Point2f Point0(x0, y0), Point3(x3, y3);
             Point2i Pointe(xeint, yeint);
 
-// finding out angles based on the detected markers position relative to x-y axes
-
-            //corected angle
+            // finding out angles based on the detected markers position relative to x-y axes
+            // corrected angle
             if (x0 >= x3 && y3 >= y0) { //Quad1
                 angle = (90 - (atan((x0 - x3) / (y3 - y0))) * (180 / 3.414));
                 if (angle < 45) {
