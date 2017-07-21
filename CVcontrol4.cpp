@@ -162,8 +162,10 @@ int main(int argc, char* argv[])
     int id0;
 
     // declaring the url and corresponding id of our r-pi to send information to
-    std::string uri0 = "ws://chairbot00.local:8000";
+    std::string uri0 = "http://ubuntu-cdr.local:3000";
     id0 = endpoint.connect(uri0);
+    cout<<"Test"<<endl;
+    cout<<id0<<endl;
 
     ///cv
     char Diff[50];
