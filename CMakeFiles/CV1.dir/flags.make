@@ -6,5 +6,5 @@ CXX_FLAGS =
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/websocketpp -isystem /usr/local/include -isystem /usr/local/include/opencv 
+CXX_INCLUDES = -isystem /home/ubuntu-cdr/Chairbot/chairbot-control/websocketpp -isystem /usr/local/include -isystem /usr/local/include/opencv 
 

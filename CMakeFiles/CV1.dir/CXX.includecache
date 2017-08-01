@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CVcontrol4.cpp
+/home/ubuntu-cdr/Chairbot/chairbot-control/CVcontrol4.cpp
 messenger.hpp
-/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/messenger.hpp
+/home/ubuntu-cdr/Chairbot/chairbot-control/messenger.hpp
 websocketpp/common/thread.hpp
 -
 websocketpp/common/memory.hpp
@@ -18,9 +18,9 @@ cstdlib
 sstream
 -
 opencv2/imgproc/imgproc.hpp
-/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/opencv2/imgproc/imgproc.hpp
+/home/ubuntu-cdr/Chairbot/chairbot-control/opencv2/imgproc/imgproc.hpp
 opencv2/imgcodecs.hpp
-/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/opencv2/imgcodecs.hpp
+/home/ubuntu-cdr/Chairbot/chairbot-control/opencv2/imgcodecs.hpp
 opencv2/highgui.hpp
 -
 opencv2/core.hpp
@@ -36,7 +36,7 @@ unistd.h
 string
 -
 
-/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/messenger.hpp
+/home/ubuntu-cdr/Chairbot/chairbot-control/messenger.hpp
 websocketpp/config/asio_no_tls_client.hpp
 -
 websocketpp/client.hpp

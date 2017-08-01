@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4
+CMAKE_SOURCE_DIR = /home/ubuntu-cdr/Chairbot/chairbot-control
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4
+CMAKE_BINARY_DIR = /home/ubuntu-cdr/Chairbot/chairbot-control
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CMakeFiles /home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu-cdr/Chairbot/chairbot-control/CMakeFiles /home/ubuntu-cdr/Chairbot/chairbot-control/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu-cdr/Chairbot/chairbot-control/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CVcontrol4.cpp" "/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/CMakeFiles/CV1.dir/CVcontrol4.cpp.o"
+  "/home/ubuntu-cdr/Chairbot/chairbot-control/CVcontrol4.cpp" "/home/ubuntu-cdr/Chairbot/chairbot-control/CMakeFiles/CV1.dir/CVcontrol4.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

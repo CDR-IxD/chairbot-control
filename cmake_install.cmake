@@ -1,4 +1,4 @@
-# Install script for directory: /home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4
+# Install script for directory: /home/ubuntu-cdr/Chairbot/chairbot-control
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/ubuntu-cdr/Chairbot/Project/ChairbotCVcontrol-master/CVcontrol4/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/ubuntu-cdr/Chairbot/chairbot-control/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

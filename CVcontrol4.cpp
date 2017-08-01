@@ -62,7 +62,9 @@ static bool readDetectorParameters(string filename, Ptr<aruco::DetectorParameter
     return true;
 }
 
-// function for having some time delay in the code , can be used when we want a time delay
+/*
+ * Function that introduces a time delay in the program.
+ */
 int msleep(unsigned long milisec)
 {
     struct timespec req = { 0 };
@@ -75,12 +77,10 @@ int msleep(unsigned long milisec)
     return 1;
 }
 
-//////////////////////////////////////////////////////
-
 int main(int argc, char* argv[])
 {
 
-    //declaring variables which will be used later during aruco marker detection
+    // Variables for aruco marker detection
     CommandLineParser parser(argc, argv, keys);
     parser.about(about);
 
@@ -88,12 +88,14 @@ int main(int argc, char* argv[])
     Ptr<aruco::DetectorParameters> detectorParams = aruco::DetectorParameters::create();
     detectorParams->doCornerRefinement = true; // do corner refinement in markers
 
-    ///////////////////////////////file read stuff////////
+    /*
+     * Reading path file.
+     */
 
     // reading stored co-ordinates from a yml file
     FileStorage read_yml0("path_0.yml", FileStorage::READ);
 
-    // i have stored the coordinates under the node : 'features', so accessing them and declaring FileNodeIterator
+    // Accessing stored coordinates under 'features'
     FileNode features = read_yml0["features"];
     FileNodeIterator it = features.begin(), it_end = features.end();
     int path00_read = 0, path00_readnew = 0, loop3 = 0;
@@ -101,32 +103,23 @@ int main(int argc, char* argv[])
     int width = 40;
     float mag, temp, length = 0;
 
-    // making vectors to store these read coordinates
+    // Vectors to store these read coordinates
     std::vector<int> x_read , y_read ;
     std::vector<int> ximpose, yimpose, x00, y00, xloop00, yloop00;
 
     // iterate through a sequence using FileNodeIterator
     for (; it != it_end; ++it, path00_read++) {
 
-        //cout << "feature #" << path00_read << ": ";
-        //cout << "x=" << (int)(*it)["x"];
-        //cout << "y=" << (int)(*it)["y"];
-
         // storing the accessed coordinates in vectors x_read , y_read  and declaring the vector variable x00, y00 to be of the samesize
         x_read .push_back(int((*it)["x"]));
         y_read .push_back(int((*it)["y"]));
         x00.push_back(0);
         y00.push_back(0);
-
-        //cout << endl<< path00_read << endl;
     }
 
     ximpose = x_read ;
     yimpose = y_read ;
-
     path00_readnew = path00_read;
-    //cout << endl<< endl;
-
     int waitTime;
 
     // If error, change cap(0) to cap(1)
@@ -143,7 +136,10 @@ int main(int argc, char* argv[])
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
     Mat image = Mat::zeros(720, 1280, CV_8UC3);
 
-    ///////////////////////////////send message
+
+    /*
+     * Code to send messages to the robot's server.
+     */
 
     char text[255];
     int loop1 = 0;
@@ -162,10 +158,8 @@ int main(int argc, char* argv[])
     int id0;
 
     // declaring the url and corresponding id of our r-pi to send information to
-    std::string uri0 = "http://ubuntu-cdr.local:3000";
+    std::string uri0 = "ws://ubuntu-cdr.local:3000";
     id0 = endpoint.connect(uri0);
-    cout<<"Test"<<endl;
-    cout<<id0<<endl;
 
     ///cv
     char Diff[50];
@@ -195,6 +189,7 @@ int main(int argc, char* argv[])
     int xdifflast = 0;
     string start;
 
+
     // declaring videowriter object for saving the output video in a specific format
     VideoWriter video("out.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(1280, 720), true);
 
@@ -206,6 +201,7 @@ int main(int argc, char* argv[])
     Mat cvimage; //= Mat::zeros( image.size(), CV_8UC3 );
 
     while (cap.isOpened()) {
+
         double tick = (double)getTickCount();
 
         //////////CV//////////
@@ -231,12 +227,14 @@ int main(int argc, char* argv[])
 
         // draw results
         if (ids.size() > 0) {
+
             aruco::drawDetectedMarkers(cvimage, corners, ids, Scalar(255, 0, 0));
             aruco::drawDetectedMarkers(dummyimage, corners, ids, Scalar(255, 0, 0));
         }
 
         // setting values of declared variables and booleans corresponding to different markers
         for (int l = 0; l < ids.size(); l++) {
+            cout<<ids[0]<<endl;
             if (ids[l] == 0) {
                 yes0 = true;
                 number0 = l;
@@ -246,6 +244,10 @@ int main(int argc, char* argv[])
         //////////////-------------------CHAIRBOT00-------------------////////////////
 
         if ((ids.size() > 0) && (yes0)) {
+            cout<<"Running"<<endl;
+
+
+
 
             // declaring variables storing coordinates of the corners of the detected marker in this loop
             int xeint, yeint;
@@ -292,6 +294,7 @@ int main(int argc, char* argv[])
 
             const Point* pts = (const Point*)Mat(pointpoly).data;
             int npts = 4;
+
 
             //front poly
             polylines(dummyimage, &pts, &npts, 1,
@@ -354,33 +357,29 @@ int main(int argc, char* argv[])
                 }
             }
 
-// for our visualization drawing arrowed lines on our local image matrice "dummyimage", which is declared fresh each time
-// this loop is run
-
+            // for our visualization drawing arrowed lines on our local image matrice "dummyimage", which is declared fresh each time
+            // this loop is run
             arrowedLine(dummyimage, Point3, Point0, Scalar(0, 0, 255), 2, 8, 0, 0.1);
             arrowedLine(dummyimage, Point3, above, Scalar(0, 0, 255), 2, 8, 0, 0.1);
 
-// calculating distance between two corners, very important so as to be independent of camera height, or marker's size
+            // calculating distance between two corners, very important so as to be independent of camera height, or marker's size
+            float distance = norm(Point0 - Point3);
 
-              float distance = norm(Point0 - Point3);
-
-// projecting location and angles of the detected marker on the image
-
+            // projecting location and angles of the detected marker on the image
             sprintf(cords, "Chairbot %d is at (%d,%d)", id0, xeint, yeint);
             sprintf(Angle, "  A   %0.1f,", angle);
             putText(dummyimage, cords, Point(50, 75), 1, 2, Scalar(255, 255, 255), 0.5);
             putText(dummyimage, Angle, Point(25, 50), 1, 2, Scalar(255, 255, 255), 0.5);
-            //circles
-// since I am using circles at the corners for controlling the chair, declaring the radius here
 
+            //circles
+            // since I am using circles at the corners for controlling the chair, declaring the radius here
             float radius = ((distance / 4));
             float radiussq = (radius * radius);
             float radiusee = (distance / 4) * (1 + 2 * (sqrt(2)));
             float radiussqee = radiusee * radiusee;
             float Widthline = ((distance * 2) / 4);
 
-// for our better visualization of all the corners and circles drawing circles and text onto the image
-
+            // for our better visualization of all the corners and circles drawing circles and text onto the image
             circle(dummyimage, Point(x0, y0), (radius), cv::Scalar(0, 100, 255), 1);
             circle(dummyimage, Point(x1, y1), (radius), cv::Scalar(0, 100, 255), 1);
             circle(dummyimage, Point(x2, y2), (radius), cv::Scalar(255, 100, 0), 1);
@@ -393,18 +392,17 @@ int main(int argc, char* argv[])
             putText(dummyimage, "3", Point(x3, y3), 1, 2, Scalar(255, 0, 255), 1.0);
 
             /////////////// play here /////////////////////////
-// for sending different commands to the r-pi , decaring more parameters to be used.
-
+            // for sending different commands to the r-pi , decaring more parameters to be used.
             int ydiff;
             int xdiff, pwmr, pwml;
             int circle0 = 0, circle1 = 0, circle2 = 0, circle3 = 0, circlee = 0;
 
-// circle0 means no. of pixxels of the path lies inside the corner0 circle, similarly circle1-3also,
-// circlee means no. of pixxels of the path which lies inside the marker.
+            // circle0 means no. of pixxels of the path lies inside the corner0 circle, similarly circle1-3also,
+            // circlee means no. of pixxels of the path which lies inside the marker.
             ////////////////////////super-imposing///////////////////
 
-// mkv is the loop no. representing how many time a particular loop for a marker has run, for chairbot00 it's mkv0, for chairbot01 it'll be mkv1, etc
 
+            // mkv is the loop no. representing how many time a particular loop for a marker has run, for chairbot00 it's mkv0, for chairbot01 it'll be mkv1, etc
             if (mkv0 == 0) {// this loop will run only once at the beginning when mkv0 is == 0;
                 int loop2 = 0;
                 for (; loop2 < (path00_readnew - 1); loop2++) {
@@ -425,10 +423,10 @@ int main(int argc, char* argv[])
                 xol = x00.at(path00_readnew - 1);
 
                 ////////////////////thickening/////////////////////
-// Since till now for the path we were using only coordinates, it is a very thin line, now by this command I am thickening the path
-// by adding some more coordinates around our path, so as to get better hold on the control. So i'll be making and saving a new vector
-// storing all the new coordinates, as you can
-
+                //
+                // Since till now for the path we were using only coordinates, it is a very thin line, now by this command I am thickening the path
+                // by adding some more coordinates around our path, so as to get better hold on the control. So i'll be making and saving a new vector
+                // storing all the new coordinates, as you can
                 for (; path_size < (path00_readnew - 10); path_size++) {
                     Point2f ci, cf, v, CON;
                     ci.x = (x00.at(path_size));
@@ -437,7 +435,6 @@ int main(int argc, char* argv[])
                     cf.y = (y00.at(path_size + 10));
 
                     //line(perline, ci, cf, Scalar(255, 0, 0));
-
                     v.x = ci.x - cf.x;
                     v.y = ci.y - cf.y;
                     mag = sqrt(v.x * v.x + v.y * v.y);
@@ -469,11 +466,10 @@ int main(int argc, char* argv[])
                 // so now we have many more coordinates and better control
             }
 
-// when the code is running, we would be super imposing the detected path onto the first detected marker position, also
-// we will be accessing a window of the path for our control. SO that will eliminate the possibility of getting confused at path intersections
-// we will also be saving information about which path element was accessed by which circle(around a particular corner), so that
-// we know the orientation of the bot and not following path in reverse direction
-
+            // when the code is running, we would be super imposing the detected path onto the first detected marker position, also
+            // we will be accessing a window of the path for our control. SO that will eliminate the possibility of getting confused at path intersections
+            // we will also be saving information about which path element was accessed by which circle(around a particular corner), so that
+            // we know the orientation of the bot and not following path in reverse direction
             int c0first = 0, c0last = 0, c1first = 0, c1last = 0, c2first = 0, c2last = 0, c3first = 0, c3last = 0, cefirst = 0, celast = 0;
             int loop2n = (cefirst - 200);
             if (loop2n < 0) {
@@ -532,10 +528,11 @@ int main(int argc, char* argv[])
 						celast = loop2n;
 					}
 				}
-		}
+            }
+
             path_window = celast + 800;
 
-// path_window is only used for making our window of the path to avoid intersections
+            // path_window is only used for making our window of the path to avoid intersections
 
             if (path_window > loop3) {
                 path_window = (loop3 - 1);
@@ -554,8 +551,8 @@ int main(int argc, char* argv[])
 
 // based on where our path is respective to robot, we will send diff. commands to arduino
 
-		if (circlee)
-			{
+            if (circlee) {
+
 				if((!circle0)&&(!circle1))
 				{
 				//send forward
@@ -632,7 +629,7 @@ int main(int argc, char* argv[])
 				endpoint.send(id0, messageel);
 				}
 			}
-		else
+                else
 				{//send stop command
 				pwmr=101;
 				pwml=001;
@@ -663,7 +660,7 @@ int main(int argc, char* argv[])
 			//cout<<"------------------no"<<endl;
 			}
         /////////////CV//////////////////
-// for our visualization of the whole code while it's running we'll have the camera feed on display with our drawings(of text, circle, polygon etc)
+        // for our visualization of the whole code while it's running we'll have the camera feed on display with our drawings(of text, circle, polygon etc)
         myimage = image + myimage + dummyimage;
         namedWindow("ShowImage", WINDOW_NORMAL);
         imshow("ShowImage", myimage); //show the frame in "ShowImage" window
