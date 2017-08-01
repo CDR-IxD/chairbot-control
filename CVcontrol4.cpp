@@ -104,21 +104,21 @@ int main(int argc, char* argv[])
     float mag, temp, length = 0;
 
     // Vectors to store these read coordinates
-    std::vector<int> x_read , y_read ;
+    std::vector<int> x_read, y_read;
     std::vector<int> ximpose, yimpose, x00, y00, xloop00, yloop00;
 
     // iterate through a sequence using FileNodeIterator
     for (; it != it_end; ++it, path00_read++) {
 
         // storing the accessed coordinates in vectors x_read , y_read  and declaring the vector variable x00, y00 to be of the samesize
-        x_read .push_back(int((*it)["x"]));
-        y_read .push_back(int((*it)["y"]));
+        x_read.push_back(int((*it)["x"]));
+        y_read.push_back(int((*it)["y"]));
         x00.push_back(0);
         y00.push_back(0);
     }
 
-    ximpose = x_read ;
-    yimpose = y_read ;
+    ximpose = x_read;
+    yimpose = y_read;
     path00_readnew = path00_read;
     int waitTime;
 
@@ -135,7 +135,6 @@ int main(int argc, char* argv[])
     cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
     Mat image = Mat::zeros(720, 1280, CV_8UC3);
-
 
     /*
      * Code to send messages to the robot's server.
@@ -189,7 +188,6 @@ int main(int argc, char* argv[])
     int xdifflast = 0;
     string start;
 
-
     // declaring videowriter object for saving the output video in a specific format
     VideoWriter video("out.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(1280, 720), true);
 
@@ -234,7 +232,7 @@ int main(int argc, char* argv[])
 
         // setting values of declared variables and booleans corresponding to different markers
         for (int l = 0; l < ids.size(); l++) {
-            cout<<ids[0]<<endl;
+            cout << ids[0] << endl;
             if (ids[l] == 0) {
                 yes0 = true;
                 number0 = l;
@@ -244,10 +242,7 @@ int main(int argc, char* argv[])
         //////////////-------------------CHAIRBOT00-------------------////////////////
 
         if ((ids.size() > 0) && (yes0)) {
-            cout<<"Running"<<endl;
-
-
-
+            cout << "Running" << endl;
 
             // declaring variables storing coordinates of the corners of the detected marker in this loop
             int xeint, yeint;
@@ -294,7 +289,6 @@ int main(int argc, char* argv[])
 
             const Point* pts = (const Point*)Mat(pointpoly).data;
             int npts = 4;
-
 
             //front poly
             polylines(dummyimage, &pts, &npts, 1,
@@ -401,9 +395,8 @@ int main(int argc, char* argv[])
             // circlee means no. of pixxels of the path which lies inside the marker.
             ////////////////////////super-imposing///////////////////
 
-
             // mkv is the loop no. representing how many time a particular loop for a marker has run, for chairbot00 it's mkv0, for chairbot01 it'll be mkv1, etc
-            if (mkv0 == 0) {// this loop will run only once at the beginning when mkv0 is == 0;
+            if (mkv0 == 0) { // this loop will run only once at the beginning when mkv0 is == 0;
                 int loop2 = 0;
                 for (; loop2 < (path00_readnew - 1); loop2++) {
                     x00.at(loop2) = (ximpose.at(loop2) - (ximpose.at(0) - xeint));
@@ -454,7 +447,7 @@ int main(int argc, char* argv[])
                         yloop00.push_back(CON.y);
                         loop3++;
                         //cout << loop3 << endl
-                             //<< CON.x << "," << CON.y << endl;
+                        //<< CON.x << "," << CON.y << endl;
                     }
                 }
                 for (path_size = 0; path_size < (loop3 - 1); path_size++) {
@@ -488,7 +481,7 @@ int main(int argc, char* argv[])
                     if (circle0 == 1) {
                         c0first = loop2n;
                     }
-                    else if(circle0 != 1){
+                    else if (circle0 != 1) {
                         c0last = loop2n;
                     }
                 }
@@ -497,7 +490,7 @@ int main(int argc, char* argv[])
                     if (circle1 == 1) {
                         c1first = loop2n;
                     }
-                    else if(circle1 != 1) {
+                    else if (circle1 != 1) {
                         c1last = loop2n;
                     }
                 }
@@ -506,7 +499,7 @@ int main(int argc, char* argv[])
                     if (circle2 == 1) {
                         c2first = loop2n;
                     }
-                    else if(circle2 != 1){
+                    else if (circle2 != 1) {
                         c2last = loop2n;
                     }
                 }
@@ -515,7 +508,7 @@ int main(int argc, char* argv[])
                     if (circle3 == 1) {
                         c3first = loop2n;
                     }
-                    else if(circle3 != 1){
+                    else if (circle3 != 1) {
                         c3last = loop2n;
                     }
                 }
@@ -524,10 +517,10 @@ int main(int argc, char* argv[])
                     if (circlee == 1) {
                         cefirst = loop2n;
                     }
-                    else if(circlee != 1){
-						celast = loop2n;
-					}
-				}
+                    else if (circlee != 1) {
+                        celast = loop2n;
+                    }
+                }
             }
 
             path_window = celast + 800;
@@ -545,120 +538,130 @@ int main(int argc, char* argv[])
             bool c023 = ((c0first > c2last) && (c0first > c3last));
             bool c123 = ((c1first > c2last) && (c1first > c3last));
             bool c210 = ((c2first > c1last) && (c2first > c0last));
-            bool c310 = ((c3first > c1last) && (c3first  > c0last));
+            bool c310 = ((c3first > c1last) && (c3first > c0last));
 
             //cout << "cefirst is:" << cefirst << " and celast is:" << celast << endl;
 
-// based on where our path is respective to robot, we will send diff. commands to arduino
+            // based on where our path is respective to robot, we will send diff. commands to arduino
 
             if (circlee) {
 
-				if((!circle0)&&(!circle1))
-				{
-				//send forward
-				pwmr=PWM;
-				pwml=PWM;
-				sprintf(Diff, "(%d,%d)", pwmr,pwml);
-				sprintf(pwm_right, "%d", pwmr);
-				sprintf(pwm_left, "%d", pwml);
+                if ((!circle0) && (!circle1)) {
+                    //send forward
+                    pwmr = PWM;
+                    pwml = PWM;
+                    sprintf(Diff, "(%d,%d)", pwmr, pwml);
+                    sprintf(pwm_right, "%d", pwmr);
+                    sprintf(pwm_left, "%d", pwml);
 
-				std::string messageef =cmd1+comma+pwm_right+comma+pwm_left+endline;
-				endpoint.send(id0, messageef);
-				}
-				else if(circle0&&c023)
-				{//send fwdleft command
-				pwmr=PWM+(KP*circle0);
-				pwml=PWM-(KP*circle0);
-					if(pwml<0){pwml=0;}
-					if(pwmr>255){pwmr=255;}
-				sprintf(Diff, "(%d,%d)", pwmr,pwml);
-				sprintf(pwm_right, "%d", pwmr);
-				sprintf(pwm_left, "%d", pwml);
-				 	 cout<<"fwdleft---------"<<circle0<<endl;
-					std::string messageel =cmd1+comma+pwm_right+comma+pwm_left+endline;
-				if (pwmr==255){
-					std::string messageel =cmd5+comma+pwm_right+comma+pwm_left+endline;
-					endpoint.send(id0, messageel);
-					break;
-					}
-					endpoint.send(id0, messageel);
-				}
-				else if(circle1&&c123)
-				{//send fwdright command
-				pwmr=PWM-(KP*circle1);
-				pwml=PWM+(KP*circle1);
-					if(pwmr<0){pwmr=0;}
-					if(pwml>255){pwml=255;}
-				sprintf(Diff, "(%d,%d)", pwmr,pwml);
-				sprintf(pwm_right, "%d", pwmr);
-				sprintf(pwm_left, "%d", pwml);
-				 	 cout<<"fwdright-------"<<circle1<<endl;
+                    std::string messageef = cmd1 + comma + pwm_right + comma + pwm_left + endline;
+                    endpoint.send(id0, messageef);
+                }
+                else if (circle0 && c023) { //send fwdleft command
+                    pwmr = PWM + (KP * circle0);
+                    pwml = PWM - (KP * circle0);
+                    if (pwml < 0) {
+                        pwml = 0;
+                    }
+                    if (pwmr > 255) {
+                        pwmr = 255;
+                    }
+                    sprintf(Diff, "(%d,%d)", pwmr, pwml);
+                    sprintf(pwm_right, "%d", pwmr);
+                    sprintf(pwm_left, "%d", pwml);
+                    cout << "fwdleft---------" << circle0 << endl;
+                    std::string messageel = cmd1 + comma + pwm_right + comma + pwm_left + endline;
+                    if (pwmr == 255) {
+                        std::string messageel = cmd5 + comma + pwm_right + comma + pwm_left + endline;
+                        endpoint.send(id0, messageel);
+                        break;
+                    }
+                    endpoint.send(id0, messageel);
+                }
+                else if (circle1 && c123) { //send fwdright command
+                    pwmr = PWM - (KP * circle1);
+                    pwml = PWM + (KP * circle1);
+                    if (pwmr < 0) {
+                        pwmr = 0;
+                    }
+                    if (pwml > 255) {
+                        pwml = 255;
+                    }
+                    sprintf(Diff, "(%d,%d)", pwmr, pwml);
+                    sprintf(pwm_right, "%d", pwmr);
+                    sprintf(pwm_left, "%d", pwml);
+                    cout << "fwdright-------" << circle1 << endl;
 
-				std::string messageel =cmd1+comma+pwm_right+comma+pwm_left+endline;
-				if (pwml==255){
-					std::string messageel =cmd5+comma+pwm_right+comma+pwm_left+endline;
-					endpoint.send(id0, messageel);
-					break;
-					}
-					endpoint.send(id0, messageel);
-				}
-				else if((c210))
-				{//send right command
-				pwmr=PWM-(KP*circle2);
-				pwml=PWM+(KP*circle2);
-					if(pwmr<0){pwmr=0;}
-					if(pwml>255){pwml=255;}
-				sprintf(Diff, "(%d,%d)", pwmr,pwml);
-				sprintf(pwm_right, "%d", pwmr);
-				sprintf(pwm_left, "%d", pwml);
-				 	 cout<<"right"<<endl;
-				std::string messageel =cmd5+comma+pwm_right+comma+pwm_left+endline;
-				endpoint.send(id0, messageel);
-				}
-				else if((c310))
-				{//send left command
-				pwmr=PWM+(KP*circle3);
-				pwml=PWM-(KP*circle3);
-					if(pwml<0){pwml=0;}
-					if(pwmr>255){pwmr=255;}
-				sprintf(Diff, "(%d,%d)", pwmr,pwml);
-				sprintf(pwm_right, "%d", pwmr);
-				sprintf(pwm_left, "%d", pwml);
-				 	 cout<<"left"<<endl;
-				std::string messageel =cmd5+comma+pwm_right+comma+pwm_left+endline;
-				endpoint.send(id0, messageel);
-				}
-			}
-                else
-				{//send stop command
-				pwmr=101;
-				pwml=001;
-				sprintf(Diff, "(%d,%d)", pwmr,pwml);
-				sprintf(pwm_right, "%d", pwmr);
-				sprintf(pwm_left, "%d", pwml);
+                    std::string messageel = cmd1 + comma + pwm_right + comma + pwm_left + endline;
+                    if (pwml == 255) {
+                        std::string messageel = cmd5 + comma + pwm_right + comma + pwm_left + endline;
+                        endpoint.send(id0, messageel);
+                        break;
+                    }
+                    endpoint.send(id0, messageel);
+                }
+                else if ((c210)) { //send right command
+                    pwmr = PWM - (KP * circle2);
+                    pwml = PWM + (KP * circle2);
+                    if (pwmr < 0) {
+                        pwmr = 0;
+                    }
+                    if (pwml > 255) {
+                        pwml = 255;
+                    }
+                    sprintf(Diff, "(%d,%d)", pwmr, pwml);
+                    sprintf(pwm_right, "%d", pwmr);
+                    sprintf(pwm_left, "%d", pwml);
+                    cout << "right" << endl;
+                    std::string messageel = cmd5 + comma + pwm_right + comma + pwm_left + endline;
+                    endpoint.send(id0, messageel);
+                }
+                else if ((c310)) { //send left command
+                    pwmr = PWM + (KP * circle3);
+                    pwml = PWM - (KP * circle3);
+                    if (pwml < 0) {
+                        pwml = 0;
+                    }
+                    if (pwmr > 255) {
+                        pwmr = 255;
+                    }
+                    sprintf(Diff, "(%d,%d)", pwmr, pwml);
+                    sprintf(pwm_right, "%d", pwmr);
+                    sprintf(pwm_left, "%d", pwml);
+                    cout << "left" << endl;
+                    std::string messageel = cmd5 + comma + pwm_right + comma + pwm_left + endline;
+                    endpoint.send(id0, messageel);
+                }
+            }
+            else { //send stop command
+                pwmr = 101;
+                pwml = 001;
+                sprintf(Diff, "(%d,%d)", pwmr, pwml);
+                sprintf(pwm_right, "%d", pwmr);
+                sprintf(pwm_left, "%d", pwml);
 
-				std::string messageel =cmd5+comma+pwm_right+comma+pwm_left+endline;
-				endpoint.send(id0, messageel);
-				}
-		  //cout<<mkv0<<endl;
+                std::string messageel = cmd5 + comma + pwm_right + comma + pwm_left + endline;
+                endpoint.send(id0, messageel);
+            }
+            //cout<<mkv0<<endl;
 
             mkv0++;
         }
         /////////////////////////////TTTTTTTHEENDDDDDD///////////////////////////////////////
-        else{
-			// If there was no marker detected, always sending stop command
+        else {
+            // If there was no marker detected, always sending stop command
 
-			int xdiff, pwmr, pwml;
-				sprintf(Diff, "(%d,%d)", pwmr,pwml);
-				sprintf(pwm_right, "%d", pwmr);
-				sprintf(pwm_left, "%d", pwml);
+            int xdiff, pwmr, pwml;
+            sprintf(Diff, "(%d,%d)", pwmr, pwml);
+            sprintf(pwm_right, "%d", pwmr);
+            sprintf(pwm_left, "%d", pwml);
 
-				std::string messagees =cmd5+comma+pwm_right+comma+pwm_left+endline;
+            std::string messagees = cmd5 + comma + pwm_right + comma + pwm_left + endline;
 
-				//endpoint.send(id0, messagees);
+            //endpoint.send(id0, messagees);
 
-			//cout<<"------------------no"<<endl;
-			}
+            //cout<<"------------------no"<<endl;
+        }
         /////////////CV//////////////////
         // for our visualization of the whole code while it's running we'll have the camera feed on display with our drawings(of text, circle, polygon etc)
         myimage = image + myimage + dummyimage;
@@ -685,5 +688,4 @@ int main(int argc, char* argv[])
 
     read_yml0.release();
     return 0;
-
 }
