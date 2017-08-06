@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
     int id0;
 
     // declaring the url and corresponding id of our r-pi to send information to
-    std::string uri0 = "ws://ubuntu-cdr.local:3000";
+    std::string uri0 = "ws://neato-04.local:3000";
     id0 = endpoint.connect(uri0);
 
     ///cv
@@ -171,7 +171,9 @@ int main(int argc, char* argv[])
     double totalTime = 0;
     int totalIterations = 0, mkv0 = 0;
     float angle;
-    int path_window = 500;
+
+    // TODO: If this greater than 287, seems to blow up
+    int path_window = 287;
 
     ///cv
     // declaring some strings, these will be used while sending commands to arduino, as arduino recieves 3 integers for now in a format like this {a,b,c}
@@ -233,8 +235,8 @@ int main(int argc, char* argv[])
         }
 
         // setting values of declared variables and booleans corresponding to different markers
+        // Change ids[l] == <marker id here>
         for (int l = 0; l < ids.size(); l++) {
-            cout<<ids[0]<<endl;
             if (ids[l] == 0) {
                 yes0 = true;
                 number0 = l;
@@ -244,7 +246,6 @@ int main(int argc, char* argv[])
         //////////////-------------------CHAIRBOT00-------------------////////////////
 
         if ((ids.size() > 0) && (yes0)) {
-            cout<<"Running"<<endl;
 
 
 
@@ -292,6 +293,7 @@ int main(int argc, char* argv[])
             pointpoly.push_back(Point(x12m, y12m));
             pointpoly.push_back(Point(x30m, y30m));
 
+
             const Point* pts = (const Point*)Mat(pointpoly).data;
             int npts = 4;
 
@@ -309,6 +311,7 @@ int main(int argc, char* argv[])
             pointpoly2.push_back(Point(x2, y2));
             pointpoly2.push_back(Point(x3, y3));
             pointpoly2.push_back(Point(x30m, y30m));
+
 
             const Point* pts2 = (const Point*)Mat(pointpoly2).data;
             int npts2 = 4;
@@ -329,6 +332,8 @@ int main(int argc, char* argv[])
             //y1=corners[0][1].y;
             Point2f Point0(x0, y0), Point3(x3, y3);
             Point2i Pointe(xeint, yeint);
+
+
 
             // finding out angles based on the detected markers position relative to x-y axes
             // corrected angle
@@ -402,6 +407,7 @@ int main(int argc, char* argv[])
             ////////////////////////super-imposing///////////////////
 
 
+
             // mkv is the loop no. representing how many time a particular loop for a marker has run, for chairbot00 it's mkv0, for chairbot01 it'll be mkv1, etc
             if (mkv0 == 0) {// this loop will run only once at the beginning when mkv0 is == 0;
                 int loop2 = 0;
@@ -427,6 +433,7 @@ int main(int argc, char* argv[])
                 // Since till now for the path we were using only coordinates, it is a very thin line, now by this command I am thickening the path
                 // by adding some more coordinates around our path, so as to get better hold on the control. So i'll be making and saving a new vector
                 // storing all the new coordinates, as you can
+                //
                 for (; path_size < (path00_readnew - 10); path_size++) {
                     Point2f ci, cf, v, CON;
                     ci.x = (x00.at(path_size));
@@ -470,6 +477,7 @@ int main(int argc, char* argv[])
             // we will be accessing a window of the path for our control. SO that will eliminate the possibility of getting confused at path intersections
             // we will also be saving information about which path element was accessed by which circle(around a particular corner), so that
             // we know the orientation of the bot and not following path in reverse direction
+            //
             int c0first = 0, c0last = 0, c1first = 0, c1last = 0, c2first = 0, c2last = 0, c3first = 0, c3last = 0, cefirst = 0, celast = 0;
             int loop2n = (cefirst - 200);
             if (loop2n < 0) {
@@ -482,6 +490,8 @@ int main(int argc, char* argv[])
                 float inside2 = ((float(xloop00.at(loop2n)) - float(x2)) * (float(xloop00.at(loop2n)) - float(x2)) + (float(yloop00.at(loop2n)) - float(y2)) * (float(yloop00.at(loop2n)) - float(y2)));
                 float inside3 = ((float(xloop00.at(loop2n)) - float(x3)) * (float(xloop00.at(loop2n)) - float(x3)) + (float(yloop00.at(loop2n)) - float(y3)) * (float(yloop00.at(loop2n)) - float(y3)));
                 float insidee = (((float(xloop00.at(loop2n)) - float(xe)) * (float(xloop00.at(loop2n)) - float(xe))) + ((float(yloop00.at(loop2n)) - float(ye)) * (float(yloop00.at(loop2n)) - float(ye))));
+
+                cout<<loop2n<<endl;
 
                 if (inside0 < radiussq) {
                     circle0++;
@@ -530,6 +540,7 @@ int main(int argc, char* argv[])
 				}
             }
 
+
             path_window = celast + 800;
 
             // path_window is only used for making our window of the path to avoid intersections
@@ -537,7 +548,7 @@ int main(int argc, char* argv[])
             if (path_window > loop3) {
                 path_window = (loop3 - 1);
             }
-            //cout << "circle0 is" << circle0 << "---circle2 is" << circle1 << "---circlee is" << circlee << endl;
+            cout << "circle0 is" << circle0 << "---circle2 is" << circle1 << "---circlee is" << circlee << endl;
 
             circle(dummyimage, Point((xloop00.at(path_window)), (yloop00.at(path_window))), (radiusee), cv::Scalar(0, 255, 0), 1);
             circle(dummyimage, Point((xloop00.at(cefirst)), (yloop00.at(cefirst))), (radiusee), cv::Scalar(0, 255, 0), 1);
@@ -547,10 +558,9 @@ int main(int argc, char* argv[])
             bool c210 = ((c2first > c1last) && (c2first > c0last));
             bool c310 = ((c3first > c1last) && (c3first  > c0last));
 
-            //cout << "cefirst is:" << cefirst << " and celast is:" << celast << endl;
+            cout << "cefirst is:" << cefirst << " and celast is:" << celast << endl;
 
-// based on where our path is respective to robot, we will send diff. commands to arduino
-
+            // based on where our path is respective to robot, we will send diff. commands to arduino
             if (circlee) {
 
 				if((!circle0)&&(!circle1))
