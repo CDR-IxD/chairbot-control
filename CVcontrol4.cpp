@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
     float angle;
 
     // TODO: If this greater than 287, seems to blow up
-    int path_window = 287;
+    int path_window = 20;
 
     ///cv
     // declaring some strings, these will be used while sending commands to arduino, as arduino recieves 3 integers for now in a format like this {a,b,c}
@@ -374,9 +374,9 @@ int main(int argc, char* argv[])
 
             //circles
             // since I am using circles at the corners for controlling the chair, declaring the radius here
-            float radius = ((distance / 4));
+            float radius = ((distance / 8));
             float radiussq = (radius * radius);
-            float radiusee = (distance / 4) * (1 + 2 * (sqrt(2)));
+            float radiusee = (distance / 8) * (1 + 2 * (sqrt(2)));
             float radiussqee = radiusee * radiusee;
             float Widthline = ((distance * 2) / 4);
 
