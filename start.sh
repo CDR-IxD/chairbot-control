@@ -2,7 +2,7 @@
 
 rm -rf out.avi
 xterm -e "cd ./webcam_stream && node websocket-relay.js supersecret 8081 8082" &
-xterm -e "cd ./webcam_stream && http-server" &
+xterm -e "http-server ./webcam_stream/" &
 xterm -e ffmpeg \
 	-f v4l2 \
 		-framerate 25 -video_size 640x480 -i /dev/video0 \
