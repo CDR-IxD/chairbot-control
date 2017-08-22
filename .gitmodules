@@ -1,3 +1,6 @@
 [submodule "neato-interface-server"]
 	path = neato-interface-server
 	url = https://github.com/abhay-venkatesh/neato-interface-server
+[submodule "webcam_stream"]
+	path = webcam_stream
+	url = https://github.com/abhay-venkatesh/webcam-stream.git
